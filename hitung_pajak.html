@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-offset-md-2" style="padding:10px;margin-top: 20px;border:1px solid">
+					<div class="row">
+						<div class="col-md-12">
+							<form id="pajak">
+								<div class="form-group">
+									<label>Pendapatan Perbulan</label>
+									<input type="number" id="income" class="form-control" placeholder="Pendapatan anda" required>
+								</div>
+								<div class="form-group">
+								    <label for="exampleFormControlSelect1">Status</label>
+								    <select class="form-control" id="status" required>
+								      <option value="">Select status</option>
+								      <option value="tk0">TK0 - Single</option>
+								      <option value="k0">K0 - MARRIED WITH NO DEPENDANT</option>
+								      <option value="k1">K1 - MARRIED WITH 1 DEPENDANT</option>
+								      <option value="k2">K2 - MARRIED WITH 2 DEPENDANTS</option>
+								      <option value="k3">K3 - MARRIED WITH 1 DEPENDANTS</option>
+								    </select>
+								  </div>
+								<button type="submit" class="btn btn-primary">Hitung</button>
+							</form>
+						</div>
+					</div>
+					<div class="row">
+						<div id="annual_tax" class="col-md-12" style="display: none">
+							<div class="form-group">
+								<label>Annual taxable income</label>
+								<input type="text" id="taxable_income" class="form-control" disabled>
+							</div>
+							<div class="form-group">
+								<label>Annual tax income</label>
+								<input type="text" id="tax_income" class="form-control" disabled>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<script>
+		function indonesia(x){
+		  return x.toLocaleString('id');
+		}
+		$("#pajak").submit(function(e) {
+			var tax = '';
+			var annual_tax = '';
+			var income = $('#income').val();
+			var status = $('#status option:selected').val();	
+			if(status == 'tk0'){
+				tax = (income*12) - 36000000;
+			}else if(status == 'k0'){
+				tax = (income*12) - 39000000;
+			}else if(status == 'k1'){
+				tax = (income*12) - 42000000;
+			}else if(status == 'k2'){
+				tax = (income*12) - 45000000;
+			}else if(status == 'k3'){
+				tax = (income*12) - 48000000;
+			}
+			if(tax > 0){
+				if(tax < 50000000){
+					annual_tax = (tax*5)/100;
+				}else if(tax > 50000000 && tax < 250000000){
+					annual_tax = (( 50000000 * 5 ) / 100);
+					annual_tax = annual_tax + ((( tax - 50000000 ) * 15 ) / 100);
+				}else if(tax > 250000000 && tax < 500000000){
+					annual_tax = (( 50000000 * 5 ) / 100);
+					annual_tax = annual_tax + (( 200000000 * 15 ) / 100);
+					annual_tax = annual_tax + ((( tax - 250000000) * 25 ) / 100);
+				}else if(tax > 500000000){
+					annual_tax = (( 50000000 * 5 ) / 100);
+					annual_tax = annual_tax + (( 200000000 * 15 ) / 100);
+					annual_tax = annual_tax + (( 250000000 * 25 ) / 100);
+					annual_tax = annual_tax + ((( tax - 500000000 ) * 35 ) / 100);
+				}
+			}else{
+				tax = 0;
+				annual_tax = 0;
+			}
+			$('#annual_tax').show();
+			$('#taxable_income').val('Rp. '+indonesia(tax));
+			$('#tax_income').val('Rp. '+indonesia(annual_tax));
+			return false;
+		});
+	</script>	
+	</body>
+</html>
